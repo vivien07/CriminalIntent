@@ -10,6 +10,7 @@ public class Crime {
     private String mTitle;
     private Date mDate;
     private boolean mSolved;
+    private boolean mRequiresPolice;
 
     //constructor
     public Crime() {
@@ -34,6 +35,11 @@ public class Crime {
         return mSolved;
     }
 
+    public boolean isRequiresPolice() {
+        return mRequiresPolice;
+    }
+
+
     //setters
     public void setTitle(String mTitle) {
         this.mTitle = mTitle;
@@ -45,6 +51,10 @@ public class Crime {
 
     public void setSolved(boolean mSolved) {
         this.mSolved = mSolved;
+    }
+
+    public void setRequiresPolice(boolean mRequiresPolice) {
+        this.mRequiresPolice = mRequiresPolice;
     }
 
 }
