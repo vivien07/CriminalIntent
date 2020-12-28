@@ -15,10 +15,15 @@ import android.widget.EditText;
 import androidx.fragment.app.Fragment;
 
 import com.example.criminalintent.R;
+import com.example.criminalintent.activities.CrimeActivity;
 import com.example.criminalintent.data.Crime;
+import com.example.criminalintent.data.CrimeLab;
+
+import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
 
+    private static final String ARG_CRIME_ID = "crime_id";
 
     private Crime crime;
     //widgets
@@ -26,11 +31,22 @@ public class CrimeFragment extends Fragment {
     private Button dateButton;
     private CheckBox solvedCheckbox;
 
+    public static CrimeFragment newInstance(UUID crimeId) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CRIME_ID, crimeId);
+        CrimeFragment crimeFragment = new CrimeFragment();
+        crimeFragment.setArguments(args);
+        return crimeFragment;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crime = new Crime();
+
+        UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+        crime = CrimeLab.getCrimeLab(getActivity()).getCrime(crimeId);
+
     }
 
 
@@ -40,6 +56,7 @@ public class CrimeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
         //titleField
         titleField = v.findViewById(R.id.crime_title);
+        titleField.setText(crime.getTitle());
         titleField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -62,6 +79,7 @@ public class CrimeFragment extends Fragment {
         dateButton.setEnabled(false);   //ensures that it will not respond in any way to the user pressing it.
         //solvedCheckbox
         solvedCheckbox = v.findViewById(R.id.crime_solved);
+        solvedCheckbox.setChecked(crime.isSolved());
         solvedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override

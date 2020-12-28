@@ -1,5 +1,6 @@
 package com.example.criminalintent.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.criminalintent.R;
+import com.example.criminalintent.activities.CrimeActivity;
 import com.example.criminalintent.data.Crime;
 import com.example.criminalintent.data.CrimeLab;
 
@@ -56,8 +58,8 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            String text = crime.getTitle();
-            Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            Intent intent = CrimeActivity.newIntent(getActivity(), crime.getId()); //explicit intent
+            startActivity(intent);
         }
 
     }
@@ -108,12 +110,22 @@ public class CrimeListFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
+    }
+
     private void updateUI() {
 
         CrimeLab crimeLab = CrimeLab.getCrimeLab(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
-        crimeAdapter = new CrimeAdapter(crimes);
-        recyclerView.setAdapter(crimeAdapter);
+        if (crimeAdapter == null) {
+            crimeAdapter = new CrimeAdapter(crimes);
+            recyclerView.setAdapter(crimeAdapter);
+        } else {
+            crimeAdapter.notifyDataSetChanged();
+        }
 
     }
 
